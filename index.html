@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+    <title>Notas GUARD-IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1d35 100%);
+            color: #fff;
+            padding: 10px;
+            min-height: 100vh;
+            touch-action: manipulation;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e2847 0%, #2d3553 100%);
+            padding: 25px 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #a0ff00;
+            text-shadow: 0 0 10px rgba(160, 255, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 20px;
+        }
+
+        .field-group {
+            background: linear-gradient(135deg, #1e2847 0%, #252b45 100%);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .counter-container {
+            display: flex;
+            align-items: center;
+            background-color: #2d3553;
+            border-radius: 10px;
+            padding: 8px;
+            gap: 10px;
+        }
+
+        .counter-btn {
+            background-color: #3a4361;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            touch-action: manipulation;
+        }
+
+        .counter-btn:active {
+            background-color: #4a5371;
+            transform: scale(0.95);
+        }
+
+        .counter-value {
+            flex: 1;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .input-text {
+            width: 100%;
+            background-color: #2d3553;
+            border: 1px solid #3a4361;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            color: #fff;
+            transition: border-color 0.3s;
+            margin-top: 8px;
+        }
+
+        .input-text:focus {
+            outline: none;
+            border-color: #a0ff00;
+        }
+
+        .input-text::placeholder {
+            color: #666;
+        }
+
+        .acta-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .acta-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .acta-counter {
+            flex: 0 0 120px;
+        }
+
+        .acta-number {
+            flex: 1;
+        }
+
+        .punto-fijo-item {
+            background-color: #2d3553;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .punto-fijo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .punto-fijo-number {
+            font-size: 16px;
+            font-weight: bold;
+            color: #a0ff00;
+        }
+
+        .delete-btn {
+            background-color: #ff4444;
+            border: none;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            touch-action: manipulation;
+        }
+
+        .add-punto-btn {
+            width: 100%;
+            background-color: #3a4361;
+            border: 2px dashed #555;
+            color: #888;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+
+        .add-punto-btn:active {
+            background-color: #4a5371;
+            border-color: #a0ff00;
+            color: #a0ff00;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, #a0ff00 0%, #80cc00 100%);
+            color: #000;
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #1ea952 100%);
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            color: #fff;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: #a0ff00;
+            color: #000;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(160, 255, 0, 0.5);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .section-header {
+            font-size: 13px;
+            font-weight: bold;
+            color: #a0ff00;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .time-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .time-input {
+            flex: 1;
+        }
+
+        /* Optimizaciones para móvil */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Notas GUARD-IA</div>
+        </div>
+
+        <div class="content">
+            <!-- DETENIDOS -->
+            <div class="field-group">
+                <div class="section-header">🔷 DETENIDOS</div>
+                <div class="row">
+                    <div>
+                        <div class="label">DET. ESPAÑOLES</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('detEsp')">-</button>
+                            <div class="counter-value" id="detEsp">0</div>
+                            <button class="counter-btn" onclick="increment('detEsp')">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="label">DET. EXTRANJEROS</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('detExt')">-</button>
+                            <div class="counter-value" id="detExt">0</div>
+                            <button class="counter-btn" onclick="increment('detExt')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IDENTIFICADOS -->
+            <div class="field-group">
+              <div class="section-header">🔷 IDENTIFICADOS</div>
+                <div class="row">
+                    <div>
+                        <div class="label">ESPAÑOLES</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('esp')">-</button>
+                            <div class="counter-value" id="esp">0</div>
+                            <button class="counter-btn" onclick="increment('esp')">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="label">EXTRANJEROS</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('ext')">-</button>
+                            <div class="counter-value" id="ext">0</div>
+                            <button class="counter-btn" onclick="increment('ext')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESP LO / EXT LO -->
+            <div class="field-group">
+                <div class="row">
+                    <div>
+                        <div class="label">ESP. L.O.</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('espLo')">-</button>
+                            <div class="counter-value" id="espLo">0</div>
+                            <button class="counter-btn" onclick="increment('espLo')">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="label">EXT. L.O.</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('extLo')">-</button>
+                            <div class="counter-value" id="extLo">0</div>
+                            <button class="counter-btn" onclick="increment('extLo')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VEHÍCULOS -->
+            <div class="field-group">
+                <div class="section-header">🚗 VEHÍCULOS</div>
+                <div class="row">
+                    <div>
+                        <div class="label">PLACAS</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('placas')">-</button>
+                            <div class="counter-value" id="placas">0</div>
+                            <button class="counter-btn" onclick="increment('placas')">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="label">RECUPERADOS</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('recup')">-</button>
+                            <div class="counter-value" id="recup">0</div>
+                            <button class="counter-btn" onclick="increment('recup')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTAS -->
+            <div class="field-group">
+                <div class="section-header">📄 ACTAS</div>
+                <div class="acta-container" id="actasContainer">
+                    <!-- DROGA -->
+                    <div class="acta-row">
+                        <div class="acta-counter">
+                            <div class="label">DROGA</div>
+                            <div class="counter-container">
+                                <button class="counter-btn" onclick="decrement('actaDroga')">-</button>
+                                <div class="counter-value" id="actaDroga">0</div>
+                                <button class="counter-btn" onclick="increment('actaDroga')">+</button>
+                            </div>
+                        </div>
+                        <div class="acta-number">
+                            <div class="label">Nº ACTA</div>
+                            <input type="text" class="input-text" id="actaDrogaNum" placeholder="000000" maxlength="6">
+                        </div>
+                    </div>
+
+                    <!-- ARMA -->
+                    <div class="acta-row">
+                        <div class="acta-counter">
+                            <div class="label">ARMA</div>
+                            <div class="counter-container">
+                                <button class="counter-btn" onclick="decrement('actaArma')">-</button>
+                                <div class="counter-value" id="actaArma">0</div>
+                                <button class="counter-btn" onclick="increment('actaArma')">+</button>
+                            </div>
+                        </div>
+                        <div class="acta-number">
+                            <div class="label">Nº ACTA</div>
+                            <input type="text" class="input-text" id="actaArmaNum" placeholder="000000" maxlength="6">
+                        </div>
+                    </div>
+
+                    <!-- RESPETO -->
+                    <div class="acta-row">
+                        <div class="acta-counter">
+                            <div class="label">RESPETO</div>
+                            <div class="counter-container">
+                                <button class="counter-btn" onclick="decrement('actaRespeto')">-</button>
+                                <div class="counter-value" id="actaRespeto">0</div>
+                                <button class="counter-btn" onclick="increment('actaRespeto')">+</button>
+                            </div>
+                        </div>
+                        <div class="acta-number">
+                            <div class="label">Nº ACTA</div>
+                            <input type="text" class="input-text" id="actaRespetoNum" placeholder="000000" maxlength="6">
+                        </div>
+                    </div>
+
+                    <!-- OTRAS -->
+                    <div class="acta-row">
+                        <div class="acta-counter">
+                            <div class="label">OTRAS</div>
+                            <div class="counter-container">
+                                <button class="counter-btn" onclick="decrement('actaOtras')">-</button>
+                                <div class="counter-value" id="actaOtras">0</div>
+                                <button class="counter-btn" onclick="increment('actaOtras')">+</button>
+                            </div>
+                        </div>
+                        <div class="acta-number">
+                            <div class="label">Nº ACTA</div>
+                            <input type="text" class="input-text" id="actaOtrasNum" placeholder="000000" maxlength="6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OTROS SERVICIOS -->
+            <div class="field-group">
+                <div class="section-header">📢 OTROS SERVICIOS</div>
+                <div class="row">
+                    <div>
+                        <div class="label">DENUNCIADO NO DET.</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('denNoDet')">-</button>
+                            <div class="counter-value" id="denNoDet">0</div>
+                            <button class="counter-btn" onclick="increment('denNoDet')">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="label">ALARMAS</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('alarm')">-</button>
+                            <div class="counter-value" id="alarm">0</div>
+                            <button class="counter-btn" onclick="increment('alarm')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRASLADOS -->
+            <div class="field-group">
+                <div class="label">TRASLADOS</div>
+                <div class="counter-container">
+                    <button class="counter-btn" onclick="decrement('traslados')">-</button>
+                    <div class="counter-value" id="traslados">0</div>
+                    <button class="counter-btn" onclick="increment('traslados')">+</button>
+                </div>
+            </div>
+
+            <!-- SERVICIOS PERSONAL -->
+            <div class="field-group">
+                <div class="section-header">👥 INICIATIVAS/COMISIONES</div>
+                <div class="row">
+                    <div>
+                        <div class="label">SERV. INICIATIVA</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('servIniciativa')">-</button>
+                            <div class="counter-value" id="servIniciativa">0</div>
+                            <button class="counter-btn" onclick="increment('servIniciativa')">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="label">SERV. SALA</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="decrement('servSala')">-</button>
+                            <div class="counter-value" id="servSala">0</div>
+                            <button class="counter-btn" onclick="increment('servSala')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PUNTOS FIJOS -->
+            <div class="field-group">
+                <div class="section-header">📍 PUNTOS FIJOS</div>
+                <div id="puntosFijosContainer"></div>
+                <button class="add-punto-btn" onclick="addPuntoFijo()">+ Añadir Punto Fijo</button>
+            </div>
+
+            <!-- BOTONES DE ACCIÓN -->
+            <div class="action-buttons">
+                <button class="btn btn-copy" onclick="copyReport()">📋 COPIAR</button>
+                <button class="btn btn-whatsapp" onclick="shareWhatsApp()">💬 WHATSAPP</button>
+                <button class="btn btn-reset" onclick="resetForm()">🗑️ LIMPIAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let puntosFijosCount = 0;
+
+        function increment(id) {
+            const element = document.getElementById(id);
+            const currentValue = parseInt(element.textContent);
+            element.textContent = currentValue + 1;
+        }
+
+        function decrement(id) {
+            const element = document.getElementById(id);
+            const currentValue = parseInt(element.textContent);
+            if (currentValue > 0) {
+                element.textContent = currentValue - 1;
+            }
+        }
+
+        function addPuntoFijo() {
+            puntosFijosCount++;
+            const container = document.getElementById('puntosFijosContainer');
+            const puntoDiv = document.createElement('div');
+            puntoDiv.className = 'punto-fijo-item';
+            puntoDiv.id = `punto-${puntosFijosCount}`;
+            puntoDiv.innerHTML = `
+                <div class="punto-fijo-header">
+                    <span class="punto-fijo-number">Punto Fijo #${puntosFijosCount}</span>
+                    <button class="delete-btn" onclick="deletePuntoFijo('punto-${puntosFijosCount}')">×</button>
+                </div>
+                <input type="text" class="input-text" placeholder="Lugar" id="lugar-${puntosFijosCount}">
+                <input type="text" class="input-text" placeholder="Servicio" id="servicio-${puntosFijosCount}">
+                <div class="time-row">
+                    <div class="time-input">
+                        <div class="label">Hora Inicio</div>
+                        <input type="time" class="input-text" id="inicio-${puntosFijosCount}">
+                    </div>
+                    <div class="time-input">
+                        <div class="label">Hora Fin</div>
+                        <input type="time" class="input-text" id="fin-${puntosFijosCount}">
+                    </div>
+                </div>
+            `;
+            container.appendChild(puntoDiv);
+        }
+
+        function deletePuntoFijo(id) {
+            const element = document.getElementById(id);
+            element.remove();
+        }
+
+        function getValue(id) {
+            return document.getElementById(id).textContent;
+        }
+
+        function getInputValue(id) {
+            const element = document.getElementById(id);
+            return element ? element.value : '';
+        }
+
+        function generateReport() {
+    const now = new Date();
+    const fecha = now.toLocaleDateString('es-ES');
+    const hora = now.toLocaleTimeString('es-ES');
+
+    let report = `📋 NOTAS GUARD-IA\n`;
+    report += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+
+    // DETENIDOS
+    let detenidosSection = '';
+    const detEsp = parseInt(getValue('detEsp'));
+    const detExt = parseInt(getValue('detExt'));
+    if (detEsp > 0) detenidosSection += ` DET.ESP: ${detEsp}\n`;
+    if (detExt > 0) detenidosSection += ` DET.EXT: ${detExt}\n`;
+    if (detenidosSection) {
+        report += `🔴 DETENIDOS\n${detenidosSection}`;
+    }
+    
+    // IDENTIFICADOS
+    let identificadosSection = '';
+    const esp = parseInt(getValue('esp'));
+    const ext = parseInt(getValue('ext'));
+    const espLo = parseInt(getValue('espLo'));
+    const extLo = parseInt(getValue('extLo'));
+    if (esp > 0) identificadosSection += ` ESP: ${esp}\n`;
+    if (ext > 0) identificadosSection += ` EXT: ${ext}\n`;
+    if (espLo > 0) identificadosSection += ` ESP LO: ${espLo}\n`;
+    if (extLo > 0) identificadosSection += ` EXT LO: ${extLo}\n`;
+    if (identificadosSection) {
+        report += `🟢 IDENTIFICADOS\n${identificadosSection}`;
+    }
+
+    // VEHÍCULOS
+    let vehiculosSection = '';
+    const placas = parseInt(getValue('placas'));
+    const recup = parseInt(getValue('recup'));
+    if (placas > 0) vehiculosSection += ` PLACAS: ${placas}\n`;
+    if (recup > 0) vehiculosSection += ` RECUP: ${recup}\n`;
+    if (vehiculosSection) {
+        report += `🟡 VEHÍCULOS\n${vehiculosSection}`;
+    }
+
+    // ACTAS
+    let actasSection = '';
+    const drogaCount = parseInt(getValue('actaDroga'));
+    const drogaNum = getInputValue('actaDrogaNum');
+    if (drogaCount > 0) {
+        actasSection += ` DROGA: ${drogaCount}`;
+        if (drogaNum) actasSection += ` - Nº ${drogaNum}`;
+        actasSection += `\n`;
+    }
+    
+    const armaCount = parseInt(getValue('actaArma'));
+    const armaNum = getInputValue('actaArmaNum');
+    if (armaCount > 0) {
+        actasSection += ` ARMA: ${armaCount}`;
+        if (armaNum) actasSection += ` - Nº ${armaNum}`;
+        actasSection += `\n`;
+    }
+
+    const respetoCount = parseInt(getValue('actaRespeto'));
+    const respetoNum = getInputValue('actaRespetoNum');
+    if (respetoCount > 0) {
+        actasSection += ` RESPETO: ${respetoCount}`;
+        if (respetoNum) actasSection += ` - Nº ${respetoNum}`;
+        actasSection += `\n`;
+    }
+
+    const otrasCount = parseInt(getValue('actaOtras'));
+    const otrasNum = getInputValue('actaOtrasNum');
+    if (otrasCount > 0) {
+        actasSection += ` OTRAS: ${otrasCount}`;
+        if (otrasNum) actasSection += ` - Nº ${otrasNum}`;
+        actasSection += `\n`;
+    }
+    if (actasSection) {
+        report += `🟠 ACTAS\n${actasSection}`;
+    }
+
+    // OTROS SERVICIOS
+    let otrosSection = '';
+    const denNoDet = parseInt(getValue('denNoDet'));
+    const alarm = parseInt(getValue('alarm'));
+    const traslados = parseInt(getValue('traslados'));
+    if (denNoDet > 0) otrosSection += ` DEN NO DET: ${denNoDet}\n`;
+    if (alarm > 0) otrosSection += ` ALARM: ${alarm}\n`;
+    if (traslados > 0) otrosSection += ` TRASLADOS: ${traslados}\n`;
+    if (otrosSection) {
+        report += `🔵 OTROS SERVICIOS\n${otrosSection}`;
+    }
+
+    // SERVICIOS PERSONAL
+    let personalSection = '';
+    const servIniciativa = parseInt(getValue('servIniciativa'));
+    const servSala = parseInt(getValue('servSala'));
+    if (servIniciativa > 0) personalSection += ` SERV. INICIATIVA: ${servIniciativa}\n`;
+    if (servSala > 0) personalSection += ` SERV. SALA: ${servSala}\n`;
+    if (personalSection) {
+        report += `🟣 SERVICIOS PERSONAL\n${personalSection}`;
+    }
+
+    // PUNTOS FIJOS
+    const puntosFijos = document.querySelectorAll('.punto-fijo-item');
+    if (puntosFijos.length > 0) {
+        let puntosFijosSection = '';
+        let puntoNum = 1;
+        puntosFijos.forEach((punto) => {
+            const id = punto.id.split('-')[1];
+            const lugar = getInputValue(`lugar-${id}`);
+            const servicio = getInputValue(`servicio-${id}`);
+            const inicio = getInputValue(`inicio-${id}`);
+            const fin = getInputValue(`fin-${id}`);
+            
+            if (lugar || servicio || inicio || fin) {
+                puntosFijosSection += `${puntoNum}º ${lugar || 'Sin lugar'}`;
+                if (servicio) puntosFijosSection += ` - ${servicio}`;
+                if (inicio && fin) puntosFijosSection += `  | ${inicio} - ${fin}`;
+                puntosFijosSection += `\n`;
+                puntoNum++;
+            }
+        });
+        if (puntosFijosSection) {
+            report += `📍 PUNTOS FIJOS\n${puntosFijosSection}`;
+        }
+    }
+
+    report += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    report += `Generado: ${fecha} ${hora}`;
+
+    return report;
+}
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        async function copyReport() {
+            const report = generateReport();
+            try {
+                await navigator.clipboard.writeText(report);
+                showToast('✅ Copiado al portapapeles');
+            } catch (err) {
+                const textArea = document.createElement('textarea');
+                textArea.value = report;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('✅ Copiado al portapapeles');
+                } catch (err) {
+                    showToast('❌ Error al copiar');
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function shareWhatsApp() {
+            const report = generateReport();
+            const url = `https://wa.me/?text=${encodeURIComponent(report)}`;
+            window.open(url, '_blank');
+        }
+
+        function resetForm() {
+            if (confirm('¿Estás seguro de que quieres borrar todos los datos?')) {
+                // Reset counters
+                document.querySelectorAll('.counter-value').forEach(el => el.textContent = '0');
+                // Reset inputs
+                document.querySelectorAll('.input-text').forEach(el => el.value = '');
+                // Remove puntos fijos
+                document.getElementById('puntosFijosContainer').innerHTML = '';
+                puntosFijosCount = 0;
+                showToast('✅ Formulario limpiado');
+            }
+        }
+      // Registrar Service Worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(reg => console.log('Service Worker registrado'))
+            .catch(err => console.log('Error al registrar SW:', err));
+    });
+}
+    </script>
+</body>
+</html>
