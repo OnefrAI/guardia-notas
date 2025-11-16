@@ -305,10 +305,16 @@
     <div class="container">
         <div class="header">
             <div class="header-title">Notas GUARD-IA</div>
+          By Onefra
         </div>
 
         <div class="content">
             <!-- DETENIDOS -->
+          <!-- INDICATIVO -->
+<div class="field-group">
+    <div class="label">INDICATIVO Z:</div>
+    <input type="text" class="input-text" id="indicativo" placeholder="110, 120, 130..." maxlength="10">
+</div>
             <div class="field-group">
                 <div class="section-header">🔷 DETENIDOS</div>
                 <div class="row">
@@ -325,15 +331,17 @@
                         <div class="counter-container">
                             <button class="counter-btn" onclick="decrement('detExt')">-</button>
                             <div class="counter-value" id="detExt">0</div>
-                            <button class="counter-btn" onclick="increment('detExt')">+</button>
+                            <button class="counter-btn" onclick="increment('detExt')">+</button>                          
                         </div>
                     </div>
                 </div>
+              <div class="label" style="margin-top: 12px;">DETENIDO JUNTO A:</div>
+    <input type="text" class="input-text" id="detenidoJuntoA" placeholder="Z120, Z130...">
             </div>
 
             <!-- IDENTIFICADOS -->
             <div class="field-group">
-              <div class="section-header">🔷 IDENTIFICADOS</div>
+              <div class="section-header">🔸 IDENTIFICADOS</div>
                 <div class="row">
                     <div>
                         <div class="label">ESPAÑOLES</div>
@@ -492,15 +500,27 @@
                 </div>
             </div>
 
-            <!-- TRASLADOS -->
-            <div class="field-group">
-                <div class="label">TRASLADOS</div>
-                <div class="counter-container">
-                    <button class="counter-btn" onclick="decrement('traslados')">-</button>
-                    <div class="counter-value" id="traslados">0</div>
-                    <button class="counter-btn" onclick="increment('traslados')">+</button>
-                </div>
+           <!-- TRASLADOS / SER. HUMANI. -->
+<div class="field-group">
+    <div class="row">
+        <div>
+            <div class="label">TRASLADOS</div>
+            <div class="counter-container">
+                <button class="counter-btn" onclick="decrement('traslados')">-</button>
+                <div class="counter-value" id="traslados">0</div>
+                <button class="counter-btn" onclick="increment('traslados')">+</button>
             </div>
+        </div>
+        <div>
+            <div class="label">SER. HUMANI.</div>
+            <div class="counter-container">
+                <button class="counter-btn" onclick="decrement('servHumani')">-</button>
+                <div class="counter-value" id="servHumani">0</div>
+                <button class="counter-btn" onclick="increment('servHumani')">+</button>
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- SERVICIOS PERSONAL -->
             <div class="field-group">
@@ -606,18 +626,24 @@
     const fecha = now.toLocaleDateString('es-ES');
     const hora = now.toLocaleTimeString('es-ES');
 
-    let report = `📋 NOTAS GUARD-IA\n`;
-    report += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+   let report = ``;
+          // INDICATIVO
+const indicativo = getInputValue('indicativo');
+if (indicativo) {
+    report += `🚔 INDICATIVO: Z${indicativo}\n`;
+}
 
     // DETENIDOS
-    let detenidosSection = '';
-    const detEsp = parseInt(getValue('detEsp'));
-    const detExt = parseInt(getValue('detExt'));
-    if (detEsp > 0) detenidosSection += ` DET.ESP: ${detEsp}\n`;
-    if (detExt > 0) detenidosSection += ` DET.EXT: ${detExt}\n`;
-    if (detenidosSection) {
-        report += `🔴 DETENIDOS\n${detenidosSection}`;
-    }
+let detenidosSection = '';
+const detEsp = parseInt(getValue('detEsp'));
+const detExt = parseInt(getValue('detExt'));
+const detenidoJuntoA = getInputValue('detenidoJuntoA');
+if (detEsp > 0) detenidosSection += ` DET.ESP: ${detEsp}\n`;
+if (detExt > 0) detenidosSection += ` DET.EXT: ${detExt}\n`;
+if (detenidoJuntoA) detenidosSection += ` Junto a: ${detenidoJuntoA}\n`;
+if (detenidosSection) {
+    report += `► DETENIDOS\n${detenidosSection}`;
+}
     
     // IDENTIFICADOS
     let identificadosSection = '';
@@ -630,7 +656,7 @@
     if (espLo > 0) identificadosSection += ` ESP LO: ${espLo}\n`;
     if (extLo > 0) identificadosSection += ` EXT LO: ${extLo}\n`;
     if (identificadosSection) {
-        report += `🟢 IDENTIFICADOS\n${identificadosSection}`;
+        report += `► IDENTIFICADOS\n${identificadosSection}`;
     }
 
     // VEHÍCULOS
@@ -640,7 +666,7 @@
     if (placas > 0) vehiculosSection += ` PLACAS: ${placas}\n`;
     if (recup > 0) vehiculosSection += ` RECUP: ${recup}\n`;
     if (vehiculosSection) {
-        report += `🟡 VEHÍCULOS\n${vehiculosSection}`;
+        report += `► VEHÍCULOS\n${vehiculosSection}`;
     }
 
     // ACTAS
@@ -677,19 +703,21 @@
         actasSection += `\n`;
     }
     if (actasSection) {
-        report += `🟠 ACTAS\n${actasSection}`;
+        report += `► ACTAS\n${actasSection}`;
     }
 
     // OTROS SERVICIOS
     let otrosSection = '';
     const denNoDet = parseInt(getValue('denNoDet'));
     const alarm = parseInt(getValue('alarm'));
-    const traslados = parseInt(getValue('traslados'));
-    if (denNoDet > 0) otrosSection += ` DEN NO DET: ${denNoDet}\n`;
-    if (alarm > 0) otrosSection += ` ALARM: ${alarm}\n`;
-    if (traslados > 0) otrosSection += ` TRASLADOS: ${traslados}\n`;
+   const traslados = parseInt(getValue('traslados'));
+const servHumani = parseInt(getValue('servHumani'));
+if (denNoDet > 0) otrosSection += ` DEN NO DET: ${denNoDet}\n`;
+if (alarm > 0) otrosSection += ` ALARM: ${alarm}\n`;
+if (traslados > 0) otrosSection += ` TRASLADOS: ${traslados}\n`;
+if (servHumani > 0) otrosSection += ` SER. HUMA.: ${servHumani}\n`;
     if (otrosSection) {
-        report += `🔵 OTROS SERVICIOS\n${otrosSection}`;
+        report += `► OTROS SERVICIOS\n${otrosSection}`;
     }
 
     // SERVICIOS PERSONAL
@@ -699,7 +727,7 @@
     if (servIniciativa > 0) personalSection += ` SERV. INICIATIVA: ${servIniciativa}\n`;
     if (servSala > 0) personalSection += ` SERV. SALA: ${servSala}\n`;
     if (personalSection) {
-        report += `🟣 SERVICIOS PERSONAL\n${personalSection}`;
+        report += `► SERVICIOS PERSONAL\n${personalSection}`;
     }
 
     // PUNTOS FIJOS
