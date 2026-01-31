@@ -3,7 +3,7 @@
 // Versión: 3.0 - Con auto-actualización
 // ============================================
 
-const CACHE_NAME = 'guardia-notas-v4';
+const CACHE_NAME = 'guardia-notas-v5';  // Subir de v4 a v5
 const urlsToCache = [
   './',
   './index.html',
@@ -73,4 +73,5 @@ self.addEventListener('message', event => {
     console.log('SW: Recibido skipWaiting, activando...');
     self.skipWaiting();
   }
+
 });
