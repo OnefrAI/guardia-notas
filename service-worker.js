@@ -3,7 +3,7 @@
 // Versión: 3.0 - Con auto-actualización
 // ============================================
 
-const CACHE_NAME = 'guardia-notas-v3';
+const CACHE_NAME = 'guardia-notas-v4';
 const urlsToCache = [
   './',
   './index.html',
